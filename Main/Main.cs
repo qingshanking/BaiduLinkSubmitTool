@@ -9,10 +9,12 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CCWin;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Main
 {
-    
+
     public partial class Main : Skin_Mac
     {
         public Main()
@@ -26,10 +28,7 @@ namespace Main
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Token_text_TextChanged(object sender, EventArgs e)
-        {
-            Token_text.Text = "";
-        }
+
         private void Token_text_MouseClick(object sender, EventArgs e)
         {
             Token_text.Text = "";
@@ -59,7 +58,16 @@ namespace Main
                 MessageBox.Show("请输入在搜索资源平台申请的推送用的准入密钥！"); return;
             }
             var str = Linksubmit(Site_text.Text, Token_text.Text, ok_url);
-            MessageBox.Show(str);
+            try
+            {
+                Result_Sucess res = JsonConvert.DeserializeObject<Result_Sucess>(str);
+                skinLabel4.Text = "提交结果：" + res.success + "条成功，当天剩余的可推送" + res.remain + "条！";
+            }
+            catch (Exception ex)
+            {
+                Result_Error res = JsonConvert.DeserializeObject<Result_Error>(str);
+                skinLabel4.Text = "提交结果：" + res.error + "错误，错误原因:" + res.message;
+            }
 
         }
         private string Linksubmit(string site, string token, List<string> url)
@@ -121,6 +129,8 @@ namespace Main
             }
             skinLabel4.Text = "验证数据：" + z + "条正常，" + y + "条失败！";
         }
+
+
     }
     /// <summary>
     /// 返回成功时候

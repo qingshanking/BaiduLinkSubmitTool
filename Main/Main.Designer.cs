@@ -86,7 +86,7 @@
             this.Token_text.Text = "请输入准入密钥";
             this.Token_text.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
             this.Token_text.WaterText = "";
-            this.Token_text.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Site_text_MouseClick);
+            this.Token_text.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Token_text_MouseClick);
             // 
             // rtfRichTextBox1
             // 
