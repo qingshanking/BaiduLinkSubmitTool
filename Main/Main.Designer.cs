@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.skinLabel1 = new CCWin.SkinControl.SkinLabel();
             this.token_label_text = new CCWin.SkinControl.SkinLabel();
             this.Site_text = new CCWin.SkinControl.SkinWaterTextBox();
@@ -167,9 +168,11 @@
             this.Controls.Add(this.token_label_text);
             this.Controls.Add(this.skinLabel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
             this.Text = "百度主动推送链接工具";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

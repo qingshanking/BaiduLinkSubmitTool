@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CCWin;
-using System.Web;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Main
 {
@@ -43,6 +37,11 @@ namespace Main
             Site_text.Text = "";
         }
 
+        /// <summary>
+        /// 链接提交
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LinkSubmit_Click(object sender, EventArgs e)
         {
             if (ok_url.Count == 0)
@@ -57,18 +56,30 @@ namespace Main
             {
                 MessageBox.Show("请输入在搜索资源平台申请的推送用的准入密钥！"); return;
             }
-            var str = Linksubmit(Site_text.Text, Token_text.Text, ok_url);
+            var str = Linksubmit(Site_text.Text, Token_text.Text, ok_url);            
             try
             {
                 Result_Sucess res = JsonConvert.DeserializeObject<Result_Sucess>(str);
-                skinLabel4.Text = "提交结果：" + res.success + "条成功，当天剩余的可推送" + res.remain + "条！";
+                skinLabel4.Text = "提交结果：" + res.Success + "条成功，当天剩余的可推送" + res.Remain + "条！";
+                SaveConfig(Site_text.Text, Token_text.Text);
             }
             catch (Exception ex)
             {
                 Result_Error res = JsonConvert.DeserializeObject<Result_Error>(str);
-                skinLabel4.Text = "提交结果：" + res.error + "错误，错误原因:" + res.message;
+                skinLabel4.Text = "提交结果：" + res.Error + "错误，错误原因:" + res.Message;
             }
 
+        }
+
+        /// <summary>
+        /// 保存配置文件
+        /// </summary>
+        /// <param name="site"></param>
+        /// <param name="token"></param>
+        private void SaveConfig(string site, string token)
+        {
+            ConfigHelper.SetValue("site", site);
+            ConfigHelper.SetValue("token", token);
         }
         private string Linksubmit(string site, string token, List<string> url)
         {
@@ -130,34 +141,21 @@ namespace Main
             skinLabel4.Text = "验证数据：" + z + "条正常，" + y + "条失败！";
         }
 
-
+        /// <summary>
+        /// 页面加载
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Main_Load(object sender, EventArgs e)
+        {
+            //获取站点地址
+            string site = ConfigHelper.GetValue("site");
+            //获取秘钥
+            string token = ConfigHelper.GetValue("token");
+            //赋值
+            Site_text.Text = site;
+            Token_text.Text = token;
+        }
     }
-    /// <summary>
-    /// 返回成功时候
-    /// </summary>
-    public class Result_Sucess
-    {
-        /// <summary>
-        /// 成功推送的url条数
-        /// </summary>
-        public int success { get; set; }
-        /// <summary>
-        /// 当天剩余的可推送url条数
-        /// </summary>
-        public int remain { get; set; }
-    }
-    /// <summary>
-    /// 返回错误时候
-    /// </summary>
-    public class Result_Error
-    {
-        /// <summary>
-        /// 错误码，与状态码相同
-        /// </summary>
-        public int error { get; set; }
-        /// <summary>
-        /// 错误描述
-        /// </summary>
-        public string message { get; set; }
-    }
+    
 }
